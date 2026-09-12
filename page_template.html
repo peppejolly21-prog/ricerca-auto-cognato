@@ -84,12 +84,13 @@ h1, .card-title, .price, .badge, .btn, .loadmore, .hero-eyebrow{font-family:"Arc
 }
 .hero-img-wrap{
   position:absolute; inset:0; overflow:hidden;
-  animation: heroDrift 18s ease-in-out infinite alternate;
+  animation: heroArrive 1.8s cubic-bezier(.16,.84,.44,1) both;
   will-change:transform;
 }
-@keyframes heroDrift{
-  0%{ transform: scale(1.02) translateX(-1.5%); }
-  100%{ transform: scale(1.09) translateX(1.5%); }
+@keyframes heroArrive{
+  0%{ transform: translateX(-38%); }
+  78%{ transform: translateX(2.5%); }
+  100%{ transform: translateX(0); }
 }
 @media (prefers-reduced-motion: reduce){
   .hero-img-wrap{ animation:none; }
