@@ -4,3 +4,4 @@ listings.json
 new_listings.json
 current_subs.json
 vapid_keys.json
+assets_src/*.png

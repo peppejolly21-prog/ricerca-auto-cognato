@@ -53,7 +53,8 @@ const html = template.replace("/*__APP_DATA__*/", jsonStr);
 
 if (!existsSync("./dist")) mkdirSync("./dist");
 writeFileSync("./dist/index.html", html);
-if (existsSync("./hero_car.jpg")) copyFileSync("./hero_car.jpg", "./dist/hero_car.jpg");
+if (existsSync("./hero_bg.jpg")) copyFileSync("./hero_bg.jpg", "./dist/hero_bg.jpg");
+if (existsSync("./hero_car.png")) copyFileSync("./hero_car.png", "./dist/hero_car.png");
 
 console.log(`Built dist/index.html — ${listingsWithFlags.length} listings, ${newCount} new.`);
 
