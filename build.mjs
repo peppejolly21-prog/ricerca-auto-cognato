@@ -1,7 +1,7 @@
 // Builds dist/index.html by injecting current listings + meta into page_template.html.
 //
 // Usage: node build.mjs [--known known_ids.json]
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync, copyFileSync } from "fs";
 
 const args = process.argv.slice(2);
 function argVal(flag) {
@@ -53,6 +53,7 @@ const html = template.replace("/*__APP_DATA__*/", jsonStr);
 
 if (!existsSync("./dist")) mkdirSync("./dist");
 writeFileSync("./dist/index.html", html);
+if (existsSync("./hero_car.jpg")) copyFileSync("./hero_car.jpg", "./dist/hero_car.jpg");
 
 console.log(`Built dist/index.html — ${listingsWithFlags.length} listings, ${newCount} new.`);
 
