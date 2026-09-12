@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ricerca Auto 3D — Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#080c14; --bg-grad-1:#0e2a24; --bg-grad-2:#0a1420;
+    --text:#e7f2ec; --text-dim:#9fb3ac; --text-faint:#6c7c78;
+    --emerald:#10b981; --emerald-soft:rgba(16,185,129,0.12); --emerald-border:rgba(16,185,129,0.3);
+    --teal:#2dd4bf; --amber:#f59e0b; --amber-soft:rgba(245,158,11,0.1); --amber-border:rgba(245,158,11,0.28);
+    --rose:#fb7185; --rose-soft:rgba(251,113,133,0.12); --rose-border:rgba(251,113,133,0.3);
+    --blue:#7dd3fc; --blue-soft:rgba(56,189,248,0.12); --blue-border:rgba(56,189,248,0.3);
+    --orange:#fdba74; --orange-soft:rgba(251,146,60,0.12); --orange-border:rgba(251,146,60,0.3);
+    --glass-bg:rgba(255,255,255,0.045); --glass-border:rgba(255,255,255,0.09);
+    --glass-bg-strong:rgba(255,255,255,0.07);
+    --chip-bg:rgba(255,255,255,0.04); --chip-border:rgba(255,255,255,0.1);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; background:var(--bg); }
+  body{
+    font-family:"Space Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--text); min-height:100vh; position:relative; overflow-x:hidden;
+  }
+  h1,h2,.font-display{ font-family:"Archivo",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; }
+  ::selection{ background:var(--emerald); color:#062017; }
+  a{ color:inherit; text-decoration:none; }
+  canvas{ display:block; touch-action: pan-y; }
+  select{ -webkit-appearance:none; appearance:none; background-image:none; font:inherit; }
+  input{ font:inherit; }
+  .tabular{ font-variant-numeric: tabular-nums; }
+
+  .bg-glow{ position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+  .bg-glow span{ position:absolute; border-radius:50%; filter:blur(100px); }
+  .bg-glow .g1{ top:-6rem; left:-4rem; width:20rem; height:20rem; background:rgba(16,185,129,0.1); }
+  .bg-glow .g2{ top:33%; right:-5rem; width:18rem; height:18rem; background:rgba(245,158,11,0.1); }
+  .bg-glow .g3{ bottom:0; left:25%; width:16rem; height:16rem; background:rgba(45,212,191,0.1); }
+  .bg-glow .fade{ position:absolute; inset:0; background:linear-gradient(180deg, transparent, var(--bg) 92%); }
+
+  .wrap{ max-width:576px; margin:0 auto; padding:16px 16px 64px; }
+
+  .eyebrow-row{ display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px; }
+  .eyebrow-pill{
+    font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.15em;
+    color:#fcd9a0; background:var(--amber-soft); border:1px solid var(--amber-border);
+    padding:4px 12px; border-radius:999px;
+  }
+
+  .hero{
+    position:relative; border-radius:28px; overflow:hidden; border:1px solid var(--glass-border);
+    box-shadow:0 25px 50px -12px rgba(0,0,0,0.6); margin-bottom:20px; user-select:none;
+    height:440px; background:radial-gradient(120% 100% at 50% 15%, var(--bg-grad-1) 0%, var(--bg-grad-2) 55%, #060a12 100%);
+  }
+  .hero .hero-img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 42%;
+    transform:scale(1.06) translate(var(--tiltx,0), var(--tilty,0)); transition:transform .4s cubic-bezier(.22,1,.36,1); will-change:transform;
+  }
+  @media (hover:hover){ .hero:hover .hero-img{ transform:scale(1.1) translate(var(--tiltx,0), var(--tilty,0)); } }
+  .hero .hero-shade{
+    position:absolute; inset:0; pointer-events:none;
+    background: linear-gradient(180deg, rgba(6,10,18,0.55) 0%, rgba(6,10,18,0) 22%, rgba(6,10,18,0) 55%, rgba(6,10,18,0.72) 78%, rgba(6,10,18,0.97) 100%);
+  }
+  .hero-content{ position:relative; z-index:1; height:100%; display:flex; flex-direction:column; justify-content:space-between; padding:18px 20px 20px; }
+  .status-row{ display:flex; align-items:center; gap:8px; }
+  .ping-dot{ position:relative; width:10px; height:10px; flex-shrink:0; }
+  .ping-dot .ring{ position:absolute; inset:0; border-radius:50%; background:var(--emerald); opacity:0.75; animation:ping 1.8s cubic-bezier(0,0,0.2,1) infinite; }
+  .ping-dot .core{ position:absolute; inset:0; border-radius:50%; background:var(--emerald); }
+  @keyframes ping{ 75%,100%{ transform:scale(2.4); opacity:0; } }
+  .status-pill{
+    font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.12em;
+    color:#a7f3d4; background:rgba(6,10,18,0.55); border:1px solid var(--emerald-border);
+    padding:5px 11px; border-radius:999px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  }
+  .hero h1{ font-size:25px; line-height:1.18; font-weight:800; color:#fff; margin:0; text-wrap:balance; text-shadow:0 2px 12px rgba(0,0,0,0.5); }
+  .hero p{ margin:6px 0 0; font-size:12.5px; color:rgba(203,213,225,0.9); max-width:34ch; line-height:1.4; text-shadow:0 1px 8px rgba(0,0,0,0.5); }
+  .hero-metrics{ margin-top:14px; display:flex; align-items:flex-end; gap:20px; }
+  .hero-metrics .counter{ font-size:28px; font-weight:800; color:#fff; }
+  .hero-metrics .counter-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); margin-top:2px; }
+  .hero-metrics .updated{ font-size:11px; color:var(--text-dim); padding-bottom:3px; }
+
+  .btn-notify{
+    position:relative; overflow:hidden; display:block; width:100%; border:0; cursor:pointer;
+    border-radius:16px; padding:16px 20px; font-family:"Archivo",sans-serif; font-weight:800; font-size:15px;
+    color:#052018; background:linear-gradient(90deg, #34d399, #10b981 45%, #2dd4bf);
+    box-shadow:0 10px 30px -10px rgba(16,185,129,0.55); transition:transform .12s ease, box-shadow .25s ease;
+    margin-bottom:8px;
+  }
+  .btn-notify:hover{ box-shadow:0 14px 40px -8px rgba(16,185,129,0.75); }
+  .btn-notify:active{ transform:scale(0.97); }
+  .btn-notify .label{ position:relative; z-index:1; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .btn-notify .shine{
+    content:""; position:absolute; top:-60%; left:0; width:28%; height:220%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+    animation:shine 5.5s ease-in-out infinite;
+  }
+  @keyframes shine{ 0%{ transform:translateX(-160%) rotate(10deg); } 100%{ transform:translateX(260%) rotate(10deg); } }
+  .notify-hint{ font-size:11.5px; color:var(--text-dim); margin:0 0 20px; padding:0 4px; line-height:1.5; }
+
+  .glass{ background:var(--glass-bg); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--glass-border); }
+
+  .search-bar{ display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:16px; margin-bottom:12px; transition:border-color .15s ease; }
+  .search-bar:focus-within{ border-color:var(--emerald-border); }
+  .search-bar svg{ color:var(--text-dim); flex-shrink:0; }
+  .search-bar input{ width:100%; background:transparent; border:0; outline:0; font-size:14px; color:var(--text); }
+  .search-bar input::placeholder{ color:#5f6f6a; }
+
+  .filters{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .select-wrap{ position:relative; }
+  .select-wrap select{
+    width:100%; border-radius:12px; padding:12px 30px 12px 14px; font-size:13px; font-weight:500;
+    color:#dbe6e2; cursor:pointer; border:1px solid var(--glass-border); background-color:var(--glass-bg);
+  }
+  .select-wrap select:focus{ outline:0; border-color:var(--emerald-border); }
+  .select-wrap svg{ position:absolute; right:11px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--text-dim); }
+
+  .result-row{ display:flex; align-items:center; justify-content:space-between; margin:0 4px 12px; }
+  .result-row .count{ font-size:12px; color:var(--text-dim); }
+  .result-row .sample{ font-size:10.5px; color:#586a65; font-style:italic; }
+
+  .list{ display:flex; flex-direction:column; gap:12px; }
+  .card{
+    border-radius:16px; padding:16px; transition:transform .22s cubic-bezier(.22,1,.36,1), box-shadow .22s ease, border-color .22s ease;
+  }
+  .card:hover{ transform:translateY(-3px); border-color:var(--emerald-border); box-shadow:0 18px 40px -20px rgba(0,0,0,0.7); }
+  .card-photo{
+    width:calc(100% + 32px); margin:-16px -16px 12px; aspect-ratio:4/3; overflow:hidden;
+    border-radius:16px 16px 0 0; background:rgba(255,255,255,0.03);
+  }
+  .card-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  .card-title{ font-family:"Archivo",sans-serif; font-weight:700; font-size:14.5px; line-height:1.35; color:#fff; margin:0; }
+  .card-badges{ display:flex; flex-wrap:wrap; gap:6px; margin-top:7px; }
+  .badge{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; padding:3px 8px; border-radius:7px; white-space:nowrap; }
+  .badge-subito{ color:var(--orange); background:var(--orange-soft); border:1px solid var(--orange-border); }
+  .badge-autoscout{ color:var(--blue); background:var(--blue-soft); border:1px solid var(--blue-border); }
+  .badge-new{ color:var(--rose); background:var(--rose-soft); border:1px solid var(--rose-border); }
+  .card-price{ font-family:"Archivo",sans-serif; font-weight:800; font-size:17px; color:var(--emerald); white-space:nowrap; }
+  .specs{ display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+  .chip{ font-size:11px; color:#cbd5cf; background:var(--chip-bg); border:1px solid var(--chip-border); padding:5px 9px; border-radius:9px; }
+  .seller{ font-size:11.5px; color:var(--text-faint); margin-top:12px; }
+  .card-link{
+    margin-top:12px; display:flex; width:100%; align-items:center; justify-content:center; gap:6px;
+    border-radius:11px; padding:10px; font-size:13.5px; font-weight:600; color:#6ee7b7;
+    background:var(--chip-bg); border:1px solid var(--chip-border); transition:background .15s ease, border-color .15s ease;
+  }
+  .card-link:hover{ background:var(--emerald-soft); border-color:var(--emerald-border); }
+
+  .foot{ margin-top:32px; font-size:11.5px; color:var(--text-faint); border-top:1px solid rgba(255,255,255,0.1); padding-top:16px; line-height:1.55; }
+  .foot p{ margin:0 0 6px; }
+  .foot strong{ color:var(--text-dim); }
+
+  .toast{
+    position:fixed; left:50%; bottom:22px; transform:translate(-50%,12px);
+    background:rgba(15,23,42,0.95); border:1px solid rgba(255,255,255,0.12);
+    color:var(--text); padding:10px 18px; border-radius:14px; font-size:13px;
+    opacity:0; pointer-events:none; transition:opacity .3s ease, transform .3s ease; z-index:50; max-width:88%; text-align:center;
+    box-shadow:0 20px 40px -12px rgba(0,0,0,0.6);
+  }
+  .toast.show{ opacity:1; transform:translate(-50%,0); }
+
+  @media (prefers-reduced-motion: reduce){
+    .btn-notify .shine{ animation:none; opacity:0; }
+    .ping-dot .ring{ animation:none; opacity:0; }
+    .card{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"><span class="g1"></span><span class="g2"></span><span class="g3"></span><div class="fade"></div></div>
+
+<div class="wrap">
+
+  <div class="eyebrow-row"><span class="eyebrow-pill">Concept — anteprima del nuovo design</span></div>
+
+  <section class="hero" id="hero">
+    <img class="hero-img" id="heroImg" src="hero_car.jpg" alt="Auto sportiva rossa su strada di campagna">
+    <div class="hero-shade"></div>
+    <div class="hero-content">
+      <div class="status-row">
+        <span class="ping-dot"><span class="ring"></span><span class="core"></span></span>
+        <span class="status-pill">Aggiornamento automatico ogni 6 ore</span>
+      </div>
+      <div>
+        <h1>Ricerca Auto — zona Lucca</h1>
+        <p>Auto usate, max 200.000&nbsp;km, 3.000–6.500&nbsp;€, entro 100&nbsp;km da Lucca. Subito.it e AutoScout24.it.</p>
+        <div class="hero-metrics">
+          <div>
+            <div class="counter tabular" id="counter">0</div>
+            <div class="counter-label">annunci trovati</div>
+          </div>
+          <div class="updated" id="updatedAt">Aggiornato: —</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <button class="btn-notify" id="notifyBtn">
+    <span class="label">🔔 Attiva notifiche su questo telefono</span>
+    <span class="shine"></span>
+  </button>
+  <p class="notify-hint">Ricevi un avviso quando compare una nuova auto nel budget. Su iPhone: apri in Safari → Condividi → Aggiungi a Home, poi attiva qui le notifiche.</p>
+
+  <div class="glass search-bar">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <input id="fSearch" type="text" placeholder="Cerca marca o modello (es. Panda)">
+  </div>
+
+  <div class="filters">
+    <div class="select-wrap">
+      <select id="fSource">
+        <option value="all">Tutte le fonti</option>
+        <option value="Subito.it">Solo Subito.it</option>
+        <option value="AutoScout24.it">Solo AutoScout24.it</option>
+      </select>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="select-wrap">
+      <select id="fSort">
+        <option value="new">Più recenti</option>
+        <option value="price_asc">Prezzo crescente</option>
+        <option value="price_desc">Prezzo decrescente</option>
+        <option value="km_asc">Km crescente</option>
+        <option value="dist_asc">Distanza crescente</option>
+      </select>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+
+  <div class="result-row">
+    <div class="count" id="resultCount">— risultati</div>
+    <div class="sample">dati di esempio per il prototipo</div>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <footer class="foot">
+    <p><strong>Facebook Marketplace</strong> non può essere controllato automaticamente (richiede login): link manuale in fondo alla versione live.</p>
+    <p>La distanza per gli annunci Subito.it è calcolata dal comune dell'annuncio (geolocalizzato) ed è approssimativa; per AutoScout24.it è fornita dal sito.</p>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const SAMPLE_LISTINGS = [
+    { source:"AutoScout24.it", title:"Fiat 500C III 1.2 Lounge 69cv", price:6500, year:"2011", km:144204, fuel:"Benzina", transmission:"Manuale", comune:"Pistoia", distanceKm:33, seller:"SC Revisioni Srl", isNew:false, url:"https://www.autoscout24.it", image:"https://prod.pictures.autoscout24.net/listing-images/d5151576-7283-4018-bf27-9d2415de2823_0d3e53c7-5365-4062-a4b3-2a95084cfed6.jpg/480x360.webp" },
+    { source:"AutoScout24.it", title:"MINI One 1.2 75cv 3p", price:6200, year:"2014", km:140191, fuel:"Benzina", transmission:"Manuale", comune:"Ospedaletto (PI)", distanceKm:19, seller:"Urma Car", isNew:true, url:"https://www.autoscout24.it" },
+    { source:"Subito.it", title:"Volkswagen Golf 1.6 TDI Business", price:5800, year:"2013", km:155000, fuel:"Diesel", transmission:"Manuale", comune:"Lucca", distanceKm:8, seller:"Privato", isNew:false, url:"https://www.subito.it", image:"https://images.sbito.it/api/v1/sbt-ads-images-pro/images/9e/9e5a3eeb-e7c7-4424-881b-9b4ac3c64431?rule=large-fixed-card-3x-auto" },
+    { source:"AutoScout24.it", title:"Citroen C3 1.2 PureTech Exclusive 82cv", price:5900, year:"2013", km:99000, fuel:"Benzina", transmission:"Manuale", comune:"Pieve a Nievole (PT)", distanceKm:25, seller:"Dream Car Srl", isNew:false, url:"https://www.autoscout24.it" },
+    { source:"AutoScout24.it", title:"Mercedes-Benz C220 CDI Avantgarde AMG", price:6500, year:"2009", km:190000, fuel:"Diesel", transmission:"Automatico", comune:"Agliana (PT)", distanceKm:41, seller:"3G Auto Srl", isNew:false, url:"https://www.autoscout24.it" },
+    { source:"AutoScout24.it", title:"Fiat Panda 1.3 MJT 16v Dynamic 75cv", price:3750, year:"2012", km:169790, fuel:"Diesel", transmission:"Manuale", comune:"Firenze", distanceKm:60, seller:"Auto3 Srl", isNew:false, url:"https://www.autoscout24.it" },
+    { source:"AutoScout24.it", title:"Peugeot 208 1.4 HDI Active 3p", price:4850, year:"2012", km:160000, fuel:"Diesel", transmission:"Manuale", comune:"Pieve a Nievole (PT)", distanceKm:24, seller:"Royal Car Srl", isNew:false, url:"https://www.autoscout24.it" },
+    { source:"AutoScout24.it", title:"Toyota Aygo 1.0 Now Connect 5p", price:5300, year:"2012", km:100000, fuel:"Benzina", transmission:"Manuale", comune:"Calenzano", distanceKm:52, seller:"Erreffe Auto Srl", isNew:false, url:"https://www.autoscout24.it" },
+  ];
+
+  function el(tag, cls, text){ const e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = text; return e; }
+
+  const sourceBadgeClass = (s) => s === "Subito.it" ? "badge badge-subito" : "badge badge-autoscout";
+
+  function renderCard(item){
+    const card = el('article','glass card');
+
+    if(item.image){
+      const photo = el('div','card-photo');
+      const img = document.createElement('img');
+      img.src = item.image;
+      img.loading = 'lazy';
+      img.alt = item.title;
+      img.addEventListener('error', () => { photo.remove(); }, { once:true });
+      photo.appendChild(img);
+      card.appendChild(photo);
+    }
+
+    const top = el('div','card-top');
+    const left = el('div');
+    left.appendChild(el('h3','card-title', item.title));
+    const badges = el('div','card-badges');
+    badges.appendChild(el('span', sourceBadgeClass(item.source), item.source));
+    if(item.isNew) badges.appendChild(el('span','badge badge-new','NUOVA'));
+    left.appendChild(badges);
+    top.appendChild(left);
+    top.appendChild(el('div','card-price tabular', '€ ' + item.price.toLocaleString('it-IT')));
+    card.appendChild(top);
+
+    const specs = el('div','specs');
+    const chip = (t) => el('span','chip', t);
+    specs.appendChild(chip('Anno ' + item.year));
+    specs.appendChild(chip(item.km.toLocaleString('it-IT') + ' km'));
+    specs.appendChild(chip(item.fuel));
+    specs.appendChild(chip(item.transmission));
+    specs.appendChild(chip(item.comune + ' · ' + item.distanceKm + ' km da Lucca'));
+    card.appendChild(specs);
+
+    card.appendChild(el('div','seller', item.seller));
+
+    const link = el('a', 'card-link', 'Vedi annuncio originale ↗');
+    link.href = item.url; link.target = '_blank'; link.rel = 'noopener';
+    card.appendChild(link);
+    return card;
+  }
+
+  function getFiltered(){
+    const source = document.getElementById('fSource').value;
+    const sort = document.getElementById('fSort').value;
+    const search = document.getElementById('fSearch').value.trim().toLowerCase();
+    let arr = SAMPLE_LISTINGS.filter(l => {
+      if(source !== 'all' && l.source !== source) return false;
+      if(search && !l.title.toLowerCase().includes(search)) return false;
+      return true;
+    }).slice();
+    if(sort === 'price_asc') arr.sort((a,b)=>a.price-b.price);
+    else if(sort === 'price_desc') arr.sort((a,b)=>b.price-a.price);
+    else if(sort === 'km_asc') arr.sort((a,b)=>a.km-b.km);
+    else if(sort === 'dist_asc') arr.sort((a,b)=>a.distanceKm-b.distanceKm);
+    else arr.sort((a,b)=>(b.isNew?1:0)-(a.isNew?1:0));
+    return arr;
+  }
+
+  function render(){
+    const filtered = getFiltered();
+    const list = document.getElementById('list');
+    list.innerHTML = '';
+    filtered.forEach(item => list.appendChild(renderCard(item)));
+    document.getElementById('resultCount').textContent = filtered.length + ' risultati con questi filtri';
+  }
+
+  ['fSource','fSort'].forEach(id => document.getElementById(id).addEventListener('change', render));
+  document.getElementById('fSearch').addEventListener('input', render);
+  render();
+
+  function animateCount(elm, to, duration){
+    const start = performance.now();
+    function step(t){
+      const p = Math.min((t - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      elm.textContent = Math.round(eased * to).toLocaleString('it-IT');
+      if(p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  animateCount(document.getElementById('counter'), SAMPLE_LISTINGS.length * 89, 1300);
+  document.getElementById('updatedAt').textContent = 'Aggiornato: ' + new Date().toLocaleString('it-IT', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+  document.getElementById('notifyBtn').addEventListener('click', () => {
+    showToast('Demo di concept: nella versione live questo attiva le notifiche push reali.');
+  });
+</script>
+
+<script>
+  // subtle pointer-driven parallax on the hero photo — plain CSS transform, no WebGL/canvas involved
+  const hero = document.getElementById('hero');
+  const heroImg = document.getElementById('heroImg');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!reduceMotion && hero && heroImg) {
+    function setPointer(e) {
+      const r = hero.getBoundingClientRect();
+      const cx = e.touches ? e.touches[0].clientX : e.clientX;
+      const cy = e.touches ? e.touches[0].clientY : e.clientY;
+      const nx = Math.max(-1, Math.min(1, ((cx - r.left) / r.width) * 2 - 1));
+      const ny = Math.max(-1, Math.min(1, ((cy - r.top) / r.height) * 2 - 1));
+      hero.style.setProperty('--tiltx', (nx * -10) + 'px');
+      hero.style.setProperty('--tilty', (ny * -6) + 'px');
+    }
+    hero.addEventListener('pointermove', setPointer);
+    hero.addEventListener('pointerleave', () => {
+      hero.style.setProperty('--tiltx', '0px');
+      hero.style.setProperty('--tilty', '0px');
+    });
+  }
+</script>
+</body>
+</html>

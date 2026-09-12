@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ricerca Auto Lucca</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#eef1ee; --bg-2:#e4e9e3; --card:#ffffff; --text:#182420; --muted:#5c685f; --border:#d9ded6;
+  --accent:#2f6f5e; --accent-shade:#204f42; --accent-text:#ffffff; --badge-new:#c62839; --badge-subito:#c96a1e; --badge-as24:#1f4fae;
+  --input-bg:#ffffff;
+  --card-highlight: rgba(255,255,255,0.65);
+  --shadow-ambient: rgba(24,36,32,0.16);
+  --shadow-contact: rgba(24,36,32,0.10);
+  --blob-1: rgba(47,111,94,0.14);
+  --blob-2: rgba(31,79,174,0.10);
+  --blob-3: rgba(201,106,30,0.08);
+  --shadow: 0 1px 3px rgba(24,36,32,0.08);
+  /* hero + car: fixed dusk palette, same in both themes on purpose */
+  --hero-1:#0c2b26; --hero-2:#0a1d24; --hero-3:#081319;
+  --hero-glow: rgba(242,183,5,0.22);
+  --hero-text: #eef6f1;
+  --hero-sub: #9fc4b7;
+  --road:#12201d; --lane:#3f5e52;
+  --car-body:#f2b705; --car-body-shade:#c9930a; --car-window:#0c2b26; --car-wheel:#141c19; --car-hub:#cfd6d1;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12161a; --bg-2:#0d1013; --card:#1b2126; --text:#e7ece7; --muted:#93a196; --border:#2b3430;
+    --accent:#54b499; --accent-shade:#377763; --accent-text:#0a1512; --badge-new:#ff6b6b; --badge-subito:#e08a3f; --badge-as24:#6f9bff;
+    --input-bg:#232a27;
+    --card-highlight: rgba(255,255,255,0.06);
+    --shadow-ambient: rgba(0,0,0,0.55);
+    --shadow-contact: rgba(0,0,0,0.35);
+    --blob-1: rgba(84,180,153,0.10);
+    --blob-2: rgba(111,155,255,0.08);
+    --blob-3: rgba(224,138,63,0.07);
+    --shadow:0 1px 3px rgba(0,0,0,0.4);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12161a; --bg-2:#0d1013; --card:#1b2126; --text:#e7ece7; --muted:#93a196; --border:#2b3430;
+  --accent:#54b499; --accent-shade:#377763; --accent-text:#0a1512; --badge-new:#ff6b6b; --badge-subito:#e08a3f; --badge-as24:#6f9bff;
+  --input-bg:#232a27;
+  --card-highlight: rgba(255,255,255,0.06);
+  --shadow-ambient: rgba(0,0,0,0.55);
+  --shadow-contact: rgba(0,0,0,0.35);
+  --blob-1: rgba(84,180,153,0.10);
+  --blob-2: rgba(111,155,255,0.08);
+  --blob-3: rgba(224,138,63,0.07);
+  --shadow:0 1px 3px rgba(0,0,0,0.4);
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{
+  background:
+    radial-gradient(600px 400px at 12% -5%, var(--blob-1), transparent 60%),
+    radial-gradient(500px 380px at 100% 15%, var(--blob-2), transparent 55%),
+    radial-gradient(520px 420px at 20% 100%, var(--blob-3), transparent 60%),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+  background-attachment: fixed;
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  min-height:100vh;
+}
+h1, .card-title, .price, .badge, .btn, .loadmore, .hero-eyebrow{font-family:"Archivo",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
+.hero-sub, .statusbar{font-family:"Space Grotesk","Segoe UI",Roboto,Arial,sans-serif;}
+.price, .specs span, .statusbar span{font-variant-numeric:tabular-nums}
+.wrap{max-width:720px;margin:0 auto;padding:12px 12px 60px}
+
+/* ---------- Hero banner ---------- */
+.hero{
+  position:relative;
+  overflow:hidden;
+  border-radius:18px;
+  margin:10px 0 16px;
+  min-height:230px;
+  padding:20px 18px 18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  box-shadow: 0 18px 34px -16px rgba(0,0,0,0.55);
+}
+.hero-img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 42%;
+  transform:scale(1.06) translate(var(--tiltx,0), var(--tilty,0)); transition:transform .4s cubic-bezier(.22,1,.36,1); will-change:transform;
+}
+@media (hover:hover){ .hero:hover .hero-img{ transform:scale(1.1) translate(var(--tiltx,0), var(--tilty,0)); } }
+.hero-shade{
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(8,15,13,0.12) 0%, rgba(8,15,13,0.32) 55%, rgba(8,15,13,0.88) 100%);
+}
+.hero-eyebrow{
+  display:inline-block;
+  font-size:0.68rem;
+  font-weight:700;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color: var(--car-body);
+  background: rgba(242,183,5,0.12);
+  border:1px solid rgba(242,183,5,0.3);
+  padding:3px 9px;
+  border-radius:999px;
+  position:relative; z-index:2;
+}
+.hero h1{
+  position:relative; z-index:2;
+  color: var(--hero-text);
+  font-size:1.4rem;
+  font-weight:800;
+  margin:10px 0 4px;
+  text-wrap:balance;
+  letter-spacing:-0.01em;
+}
+.hero p{
+  position:relative; z-index:2;
+  color: var(--hero-sub);
+  font-size:0.85rem;
+  margin:0 0 18px;
+  line-height:1.45;
+  max-width:46ch;
+}
+
+.statusbar{display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:var(--muted);margin-bottom:10px;flex-wrap:wrap;gap:6px}
+.panel{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:12px;
+  box-shadow: inset 0 1px 0 var(--card-highlight), 0 10px 22px -14px var(--shadow-ambient), 0 2px 5px -1px var(--shadow-contact);
+}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:var(--accent-text);border:none;border-radius:10px;
+  padding:11px 14px;font-size:0.88rem;font-weight:600;cursor:pointer;width:100%;justify-content:center;
+  box-shadow: 0 3px 0 var(--accent-shade), 0 8px 16px -8px var(--shadow-ambient);
+  transition: transform .1s ease, box-shadow .1s ease;
+}
+.btn:active{ transform: translateY(3px); box-shadow: 0 0 0 var(--accent-shade); }
+.btn:disabled{opacity:0.6;cursor:default}
+.btn.secondary{background:transparent;color:var(--accent);border:1px solid var(--accent);box-shadow:none}
+.hint{font-size:0.76rem;color:var(--muted);margin-top:6px;line-height:1.4}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.filters select, .filters input{
+  flex:1;min-width:110px;background:var(--input-bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:0.85rem;
+  box-shadow: inset 0 1px 4px var(--shadow-contact);
+}
+.count{font-size:0.8rem;color:var(--muted);margin:4px 0 10px}
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:12px;
+  box-shadow: inset 0 1px 0 var(--card-highlight), 0 14px 26px -16px var(--shadow-ambient), 0 2px 5px -1px var(--shadow-contact);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.card:active{ transform: translateY(1px) scale(0.997); }
+.card-photo{
+  width:calc(100% + 24px);margin:-12px -12px 10px;border-radius:14px 14px 0 0;overflow:hidden;
+  aspect-ratio:4/3;background:var(--bg);position:relative;
+}
+.card-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.card-title{font-weight:700;font-size:0.98rem;margin:0 0 4px}
+.price{font-weight:800;font-size:1.15rem;white-space:nowrap;color:var(--accent)}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.badge{font-size:0.68rem;font-weight:700;padding:3px 7px;border-radius:6px;color:#fff;text-transform:uppercase;letter-spacing:0.02em}
+.badge.subito{background:var(--badge-subito)}
+.badge.as24{background:var(--badge-as24)}
+.badge.new{background:var(--badge-new)}
+.badge.outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.specs{display:flex;flex-wrap:wrap;gap:8px;font-size:0.8rem;color:var(--muted);margin:6px 0}
+.specs span{background:var(--bg);padding:3px 7px;border-radius:6px;border:1px solid var(--border);box-shadow:inset 0 1px 2px var(--shadow-contact)}
+.desc{font-size:0.83rem;color:var(--text);margin:8px 0;white-space:pre-wrap;max-height:4.5em;overflow:hidden;position:relative;line-height:1.4}
+.desc.expanded{max-height:none}
+.desc-toggle{font-size:0.78rem;color:var(--accent);cursor:pointer;font-weight:600;margin-bottom:6px;display:inline-block}
+.seller{font-size:0.78rem;color:var(--muted);margin:4px 0}
+.card-actions{display:flex;gap:8px;margin-top:8px}
+.card-actions a{
+  flex:1;text-align:center;text-decoration:none;background:var(--accent);color:var(--accent-text);padding:9px;border-radius:8px;font-size:0.85rem;font-weight:600;
+  box-shadow: 0 3px 0 var(--accent-shade);
+}
+.loadmore{
+  width:100%;padding:12px;margin-top:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--text);font-weight:600;cursor:pointer;
+  box-shadow: inset 0 1px 0 var(--card-highlight), 0 8px 18px -12px var(--shadow-ambient);
+}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:0.85rem;opacity:0;pointer-events:none;transition:opacity .3s;z-index:50;max-width:90%;text-align:center;box-shadow:0 10px 24px -8px rgba(0,0,0,0.4)}
+.toast.show{opacity:1}
+footer{margin-top:20px;font-size:0.78rem;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:14px}
+footer a{color:var(--accent)}
+.empty{text-align:center;color:var(--muted);padding:30px 10px;font-size:0.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero" id="hero">
+    <img class="hero-img" id="heroImg" src="hero_car.jpg" alt="">
+    <div class="hero-shade"></div>
+    <span class="hero-eyebrow">Aggiornamento automatico ogni 6 ore</span>
+    <h1>🚗 Ricerca Auto — zona Lucca</h1>
+    <p>Auto usate, max 200.000&nbsp;km, prezzo 3.000–6.500&nbsp;€, entro 100&nbsp;km da Lucca. Fonti: Subito.it e AutoScout24.it.</p>
+  </div>
+
+  <div class="statusbar">
+    <span id="statusCount">— annunci</span>
+    <span id="statusUpdated">—</span>
+  </div>
+
+  <div class="filters">
+    <select id="fSource">
+      <option value="all">Tutte le fonti</option>
+      <option value="Subito.it">Solo Subito.it</option>
+      <option value="AutoScout24.it">Solo AutoScout24.it</option>
+    </select>
+    <select id="fSort">
+      <option value="new">Più recenti</option>
+      <option value="price_asc">Prezzo crescente</option>
+      <option value="price_desc">Prezzo decrescente</option>
+      <option value="km_asc">Km crescente</option>
+      <option value="dist_asc">Distanza crescente</option>
+    </select>
+  </div>
+  <div class="filters">
+    <input type="text" id="fSearch" placeholder="Cerca marca o modello (es. Panda)">
+  </div>
+
+  <div class="count" id="resultCount"></div>
+  <div id="list"></div>
+  <button class="loadmore" id="loadMoreBtn" style="display:none">Mostra altri annunci</button>
+  <div class="empty" id="emptyMsg" style="display:none">Nessun annuncio trovato con questi filtri.</div>
+
+  <footer>
+    <p><strong>Facebook Marketplace</strong> non può essere controllato automaticamente (richiede login). Puoi controllare manualmente qui: <a id="fbLink" href="#" target="_blank" rel="noopener">apri Marketplace zona Lucca — veicoli</a>.</p>
+    <p>La distanza per gli annunci Subito.it è calcolata dal comune dell'annuncio (geolocalizzato) ed è approssimativa; per AutoScout24.it è quella fornita direttamente dal sito.</p>
+    <p id="lastRunInfo"></p>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script id="app-data" type="application/json">/*__APP_DATA__*/</script>
+
+<script>
+(function(){
+  const DATA = JSON.parse(document.getElementById('app-data').textContent);
+  const PAGE_SIZE = 30;
+  let visibleCount = PAGE_SIZE;
+
+  const fmtDate = (iso) => {
+    if(!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleString('it-IT', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  };
+
+  function updateStatus(){
+    document.getElementById('statusCount').textContent = `${DATA.listings.length} annunci totali`;
+    document.getElementById('statusUpdated').textContent = 'Aggiornato: ' + fmtDate(DATA.meta.lastRunAt);
+    document.getElementById('lastRunInfo').textContent = 'Ultima scansione: ' + fmtDate(DATA.meta.lastRunAt);
+  }
+
+  function getFiltered(){
+    const source = document.getElementById('fSource').value;
+    const sort = document.getElementById('fSort').value;
+    const search = document.getElementById('fSearch').value.trim().toLowerCase();
+    let arr = DATA.listings.filter(l => {
+      if(source !== 'all' && l.source !== source) return false;
+      if(search && !(l.title||'').toLowerCase().includes(search) && !(l.description||'').toLowerCase().includes(search)) return false;
+      return true;
+    });
+    arr = arr.slice();
+    if(sort === 'price_asc') arr.sort((a,b)=>(a.price||0)-(b.price||0));
+    else if(sort === 'price_desc') arr.sort((a,b)=>(b.price||0)-(a.price||0));
+    else if(sort === 'km_asc') arr.sort((a,b)=>(a.km||0)-(b.km||0));
+    else if(sort === 'dist_asc') arr.sort((a,b)=>(a.distanceKm==null?9999:a.distanceKm)-(b.distanceKm==null?9999:b.distanceKm));
+    else arr.sort((a,b)=>(b.isNew?1:0)-(a.isNew?1:0) || (a.source<b.source?-1:1));
+    return arr;
+  }
+
+  function el(tag, cls, text){
+    const e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(text != null) e.textContent = text;
+    return e;
+  }
+
+  function renderCard(item){
+    const card = el('div','card');
+
+    if(item.photo){
+      const photo = el('div','card-photo');
+      const img = document.createElement('img');
+      img.src = item.photo;
+      img.loading = 'lazy';
+      img.alt = item.title || 'Foto annuncio';
+      img.addEventListener('error', () => { photo.remove(); }, { once:true });
+      photo.appendChild(img);
+      card.appendChild(photo);
+    }
+
+    const top = el('div','card-top');
+    const titleWrap = el('div');
+    titleWrap.appendChild(el('div','card-title', item.title || '(senza titolo)'));
+    const badges = el('div','badges');
+    badges.appendChild(el('span','badge ' + (item.source==='Subito.it'?'subito':'as24'), item.source));
+    if(item.isNew) badges.appendChild(el('span','badge new','NUOVA'));
+    if(item.sellerType) badges.appendChild(el('span','badge outline', item.sellerType));
+    titleWrap.appendChild(badges);
+    top.appendChild(titleWrap);
+    top.appendChild(el('div','price', item.price != null ? ('€ ' + item.price.toLocaleString('it-IT')) : '—'));
+    card.appendChild(top);
+
+    const specs = el('div','specs');
+    if(item.year) specs.appendChild(el('span',null,'Anno ' + item.year));
+    if(item.km != null) specs.appendChild(el('span',null, item.km.toLocaleString('it-IT') + ' km'));
+    if(item.fuel) specs.appendChild(el('span',null,item.fuel));
+    if(item.transmission) specs.appendChild(el('span',null,item.transmission));
+    if(item.condition) specs.appendChild(el('span',null,item.condition));
+    const locText = [item.comune, item.distanceKm!=null ? (item.distanceKm + ' km da Lucca') : null].filter(Boolean).join(' · ');
+    if(locText) specs.appendChild(el('span',null,locText));
+    card.appendChild(specs);
+
+    if(item.description){
+      const toggle = el('span','desc-toggle','Mostra descrizione ▾');
+      const desc = el('div','desc', item.description);
+      toggle.addEventListener('click', () => {
+        const expanded = desc.classList.toggle('expanded');
+        toggle.textContent = expanded ? 'Nascondi descrizione ▴' : 'Mostra descrizione ▾';
+      });
+      card.appendChild(toggle);
+      card.appendChild(desc);
+    }
+
+    if(item.sellerName || item.phone){
+      const seller = el('div','seller', [item.sellerName, item.phone].filter(Boolean).join(' · '));
+      card.appendChild(seller);
+    }
+
+    const actions = el('div','card-actions');
+    const link = el('a', null, 'Vedi annuncio originale ↗');
+    link.href = item.url || '#';
+    link.target = '_blank';
+    link.rel = 'noopener';
+    actions.appendChild(link);
+    card.appendChild(actions);
+
+    return card;
+  }
+
+  function render(){
+    const filtered = getFiltered();
+    const list = document.getElementById('list');
+    list.innerHTML = '';
+    const slice = filtered.slice(0, visibleCount);
+    slice.forEach(item => list.appendChild(renderCard(item)));
+    document.getElementById('resultCount').textContent = filtered.length + ' risultati con questi filtri';
+    document.getElementById('emptyMsg').style.display = filtered.length === 0 ? 'block' : 'none';
+    document.getElementById('loadMoreBtn').style.display = filtered.length > visibleCount ? 'block' : 'none';
+  }
+
+  document.getElementById('fSource').addEventListener('change', () => { visibleCount = PAGE_SIZE; render(); });
+  document.getElementById('fSort').addEventListener('change', () => { visibleCount = PAGE_SIZE; render(); });
+  document.getElementById('fSearch').addEventListener('input', () => { visibleCount = PAGE_SIZE; render(); });
+  document.getElementById('loadMoreBtn').addEventListener('click', () => { visibleCount += PAGE_SIZE; render(); });
+
+  document.getElementById('fbLink').href = 'https://www.facebook.com/marketplace/category/vehicles?radius=100&sortBy=creation_time_descend';
+
+  updateStatus();
+  render();
+})();
+</script>
+
+<script>
+  // subtle pointer-driven parallax on the hero photo — plain CSS transform, no WebGL/canvas
+  const hero = document.getElementById('hero');
+  const heroImg = document.getElementById('heroImg');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!reduceMotion && hero && heroImg) {
+    function setPointer(e) {
+      const r = hero.getBoundingClientRect();
+      const cx = e.touches ? e.touches[0].clientX : e.clientX;
+      const cy = e.touches ? e.touches[0].clientY : e.clientY;
+      const nx = Math.max(-1, Math.min(1, ((cx - r.left) / r.width) * 2 - 1));
+      const ny = Math.max(-1, Math.min(1, ((cy - r.top) / r.height) * 2 - 1));
+      hero.style.setProperty('--tiltx', (nx * -10) + 'px');
+      hero.style.setProperty('--tilty', (ny * -6) + 'px');
+    }
+    hero.addEventListener('pointermove', setPointer);
+    hero.addEventListener('pointerleave', () => {
+      hero.style.setProperty('--tiltx', '0px');
+      hero.style.setProperty('--tilty', '0px');
+    });
+  }
+</script>
+</body>
+</html>

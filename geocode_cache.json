@@ -1,0 +1,390 @@
+{
+ "borgo a mozzano": {
+  "lat": 43.9767282,
+  "lon": 10.5308326
+ },
+ "lucca": {
+  "lat": 44.0177639,
+  "lon": 10.45443
+ },
+ "massarosa": {
+  "lat": 43.8676499,
+  "lon": 10.3397157
+ },
+ "viareggio": {
+  "lat": 43.8672392,
+  "lon": 10.2506055
+ },
+ "seravezza": {
+  "lat": 44.0193599,
+  "lon": 10.2286951
+ },
+ "capannori": {
+  "lat": 43.8420391,
+  "lon": 10.5735254
+ },
+ "camaiore": {
+  "lat": 43.9380611,
+  "lon": 10.3039553
+ },
+ "pietrasanta": {
+  "lat": 43.9589031,
+  "lon": 10.2332031
+ },
+ "altopascio": {
+  "lat": 43.8150413,
+  "lon": 10.6743961
+ },
+ "bientina": {
+  "lat": 43.7101845,
+  "lon": 10.6203207
+ },
+ "pisa": {
+  "lat": 43.4714722,
+  "lon": 10.6797912
+ },
+ "ponsacco": {
+  "lat": 43.6207132,
+  "lon": 10.6308287
+ },
+ "san giuliano terme": {
+  "lat": 43.7629956,
+  "lon": 10.4410399
+ },
+ "san miniato": {
+  "lat": 43.6797502,
+  "lon": 10.8500949
+ },
+ "calcinaia": {
+  "lat": 43.6832014,
+  "lon": 10.6153079
+ },
+ "montecatini val di cecina": {
+  "lat": 43.3928165,
+  "lon": 10.7490933
+ },
+ "pomarance": {
+  "lat": 43.2992367,
+  "lon": 10.8724009
+ },
+ "montopoli in val d'arno": {
+  "lat": 43.6702986,
+  "lon": 10.7608316
+ },
+ "casciana terme lari": {
+  "lat": 43.5521588,
+  "lon": 10.5942065
+ },
+ "pontedera": {
+  "lat": 43.6634536,
+  "lon": 10.6354851
+ },
+ "cascina": {
+  "lat": 43.6766738,
+  "lon": 10.5492244
+ },
+ "santa croce sull'arno": {
+  "lat": 43.7101077,
+  "lon": 10.7819415
+ },
+ "vicopisano": {
+  "lat": 43.6998317,
+  "lon": 10.5846946
+ },
+ "vecchiano": {
+  "lat": 43.783342,
+  "lon": 10.384403
+ },
+ "crespina lorenzana": {
+  "lat": 43.587912,
+  "lon": 10.5546526
+ },
+ "santa maria a monte": {
+  "lat": 43.7075159,
+  "lon": 10.6858074
+ },
+ "volterra": {
+  "lat": 43.400337,
+  "lon": 10.860019
+ },
+ "terricciola": {
+  "lat": 43.524738,
+  "lon": 10.680114
+ },
+ "livorno": {
+  "lat": 42.7902379,
+  "lon": 10.3402239
+ },
+ "bibbona": {
+  "lat": 43.2697843,
+  "lon": 10.5972697
+ },
+ "piombino": {
+  "lat": 42.9231662,
+  "lon": 10.5268192
+ },
+ "campiglia marittima": {
+  "lat": 43.0401668,
+  "lon": 10.603649
+ },
+ "rosignano marittimo": {
+  "lat": 43.406786,
+  "lon": 10.4733663
+ },
+ "cecina": {
+  "lat": 43.3113449,
+  "lon": 10.5173443
+ },
+ "castagneto carducci": {
+  "lat": 43.1607424,
+  "lon": 10.6110056
+ },
+ "marciana marina": {
+  "lat": 42.8001346,
+  "lon": 10.1954518
+ },
+ "suvereto": {
+  "lat": 43.079015,
+  "lon": 10.6786806
+ },
+ "collesalvetti": {
+  "lat": 43.588912,
+  "lon": 10.476264
+ },
+ "portoferraio": {
+  "lat": 42.7978119,
+  "lon": 10.2992572
+ },
+ "marciana": {
+  "lat": 42.7781822,
+  "lon": 10.1533197
+ },
+ "massa": {
+  "lat": 44.0359323,
+  "lon": 10.1395519
+ },
+ "carrara": {
+  "lat": 44.0796519,
+  "lon": 10.0977529
+ },
+ "aulla": {
+  "lat": 44.214548,
+  "lon": 9.967787
+ },
+ "fivizzano": {
+  "lat": 44.23835,
+  "lon": 10.12599
+ },
+ "zeri": {
+  "lat": 44.3537185,
+  "lon": 9.7632999
+ },
+ "pontremoli": {
+  "lat": 44.3771813,
+  "lon": 9.8829911
+ },
+ "licciana nardi": {
+  "lat": 44.2648672,
+  "lon": 10.0381722
+ },
+ "pieve a nievole": {
+  "lat": 43.8791124,
+  "lon": 10.7961119
+ },
+ "agliana": {
+  "lat": 43.9038155,
+  "lon": 11.0033961
+ },
+ "pescia": {
+  "lat": 43.90171,
+  "lon": 10.6897811
+ },
+ "monsummano terme": {
+  "lat": 43.8707438,
+  "lon": 10.8140162
+ },
+ "ponte buggianese": {
+  "lat": 43.8295811,
+  "lon": 10.7675915
+ },
+ "chiesina uzzanese": {
+  "lat": 43.8391003,
+  "lon": 10.7193421
+ },
+ "pistoia": {
+  "lat": 43.9740957,
+  "lon": 10.8687081
+ },
+ "montecatini-terme": {
+  "lat": 43.883179,
+  "lon": 10.7709533
+ },
+ "larciano": {
+  "lat": 43.8250403,
+  "lon": 10.8563674
+ },
+ "buggiano": {
+  "lat": 43.8999353,
+  "lon": 10.726569
+ },
+ "serravalle pistoiese": {
+  "lat": 43.9058503,
+  "lon": 10.8330195
+ },
+ "quarrata": {
+  "lat": 43.8475005,
+  "lon": 10.9777009
+ },
+ "prato": {
+  "lat": 43.9357181,
+  "lon": 11.0941473
+ },
+ "carmignano": {
+  "lat": 43.7998705,
+  "lon": 11.0208838
+ },
+ "montemurlo": {
+  "lat": 43.9269279,
+  "lon": 11.0366993
+ },
+ "poggio a caiano": {
+  "lat": 43.8154222,
+  "lon": 11.0480619
+ },
+ "firenze": {
+  "lat": 43.7697955,
+  "lon": 11.2556404
+ },
+ "empoli": {
+  "lat": 43.7194884,
+  "lon": 10.9458556
+ },
+ "scandicci": {
+  "lat": 43.7567104,
+  "lon": 11.1847619
+ },
+ "castelfiorentino": {
+  "lat": 43.6056068,
+  "lon": 10.9712484
+ },
+ "campi bisenzio": {
+  "lat": 43.8216342,
+  "lon": 11.1366776
+ },
+ "reggello": {
+  "lat": 43.6830877,
+  "lon": 11.5368965
+ },
+ "montespertoli": {
+  "lat": 43.6467537,
+  "lon": 11.0669289
+ },
+ "rignano sull'arno": {
+  "lat": 43.72105,
+  "lon": 11.451427
+ },
+ "rufina": {
+  "lat": 43.8266681,
+  "lon": 11.4900777
+ },
+ "montelupo fiorentino": {
+  "lat": 43.7304017,
+  "lon": 11.0162785
+ },
+ "vicchio": {
+  "lat": 43.9332548,
+  "lon": 11.4654055
+ },
+ "borgo san lorenzo": {
+  "lat": 43.954248,
+  "lon": 11.3864681
+ },
+ "cerreto guidi": {
+  "lat": 43.7580104,
+  "lon": 10.8596148
+ },
+ "calenzano": {
+  "lat": 43.8652493,
+  "lon": 11.1673685
+ },
+ "dicomano": {
+  "lat": 43.8912911,
+  "lon": 11.5237068
+ },
+ "figline e incisa valdarno": {
+  "lat": 43.6307949,
+  "lon": 11.4629459
+ },
+ "bagno a ripoli": {
+  "lat": 43.752172,
+  "lon": 11.3199949
+ },
+ "sesto fiorentino": {
+  "lat": 43.831721,
+  "lon": 11.1992239
+ },
+ "firenzuola": {
+  "lat": 44.1190791,
+  "lon": 11.3792271
+ },
+ "siena": {
+  "lat": 43.1672059,
+  "lon": 11.467561
+ },
+ "colle di val d'elsa": {
+  "lat": 43.4226367,
+  "lon": 11.1263856
+ },
+ "chianciano terme": {
+  "lat": 43.0582549,
+  "lon": 11.8284293
+ },
+ "montepulciano": {
+  "lat": 43.0945279,
+  "lon": 11.7826795
+ },
+ "castellina in chianti": {
+  "lat": 43.4691786,
+  "lon": 11.2872857
+ },
+ "monteroni d'arbia": {
+  "lat": 43.2310941,
+  "lon": 11.4214524
+ },
+ "monteriggioni": {
+  "lat": 43.3899772,
+  "lon": 11.2235936
+ },
+ "poggibonsi": {
+  "lat": 43.4677215,
+  "lon": 11.148762
+ },
+ "montalcino": {
+  "lat": 43.0575578,
+  "lon": 11.4902818
+ },
+ "chiusi": {
+  "lat": 43.016515,
+  "lon": 11.9477359
+ },
+ "rapolano terme": {
+  "lat": 43.2865495,
+  "lon": 11.6044699
+ },
+ "torrita di siena": {
+  "lat": 43.1667601,
+  "lon": 11.7716466
+ },
+ "sinalunga": {
+  "lat": 43.2121236,
+  "lon": 11.7364829
+ },
+ "abbadia san salvatore": {
+  "lat": 42.8809558,
+  "lon": 11.6723792
+ },
+ "asciano": {
+  "lat": 43.2347752,
+  "lon": 11.5594227
+ }
+}

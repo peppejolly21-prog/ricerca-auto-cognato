@@ -1,0 +1,52 @@
+name: Aggiorna annunci e pubblica
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Scrape listings
+        run: node scraper.mjs
+
+      - name: Build site
+        run: node build.mjs --known known_ids.json
+
+      - name: Commit updated cache files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add known_ids.json geocode_cache.json
+          git diff --staged --quiet || git commit -m "Aggiorna cache annunci [skip ci]"
+          git push
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
