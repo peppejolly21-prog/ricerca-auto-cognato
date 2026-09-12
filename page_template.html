@@ -84,23 +84,23 @@ h1, .card-title, .price, .badge, .btn, .loadmore, .hero-eyebrow{font-family:"Arc
 }
 .hero-scene{
   position:absolute; inset:0; overflow:hidden;
-  transform:scale(1.06) translate(var(--tiltx,0), var(--tilty,0)); transition:transform .4s cubic-bezier(.22,1,.36,1); will-change:transform;
 }
-@media (hover:hover){ .hero:hover .hero-scene{ transform:scale(1.1) translate(var(--tiltx,0), var(--tilty,0)); } }
 .hero-bg{
   position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 42%;
 }
 .hero-car-wrap{
-  position:absolute; left:2%; bottom:6%; width:52%;
-  animation: heroCarArrive 1.7s cubic-bezier(.16,.84,.44,1) both;
+  position:absolute; left:2%; top:23.2%; width:52%;
+  animation: heroCarArrive 2.6s cubic-bezier(.25,.65,.3,1) both;
   filter: drop-shadow(0 12px 14px rgba(0,0,0,0.4));
-  will-change:transform;
 }
 .hero-car-wrap img{ display:block; width:100%; height:auto; }
 @keyframes heroCarArrive{
-  0%{ transform: translateX(-280%); }
-  76%{ transform: translateX(4%); }
-  100%{ transform: translateX(0); }
+  0%  { left:83%; top:21.8%; width:6%;  opacity:0; }
+  10% { left:78%; top:21.7%; width:9%;  opacity:1; }
+  32% { left:68%; top:21.6%; width:15%; opacity:1; }
+  56% { left:52%; top:17.2%; width:27%; opacity:1; }
+  80% { left:26%; top:10.8%; width:42%; opacity:1; }
+  100%{ left:2%;  top:23.2%; width:52%; opacity:1; }
 }
 @media (prefers-reduced-motion: reduce){
   .hero-car-wrap{ animation:none; }
@@ -384,30 +384,6 @@ footer a{color:var(--accent)}
   updateStatus();
   render();
 })();
-</script>
-
-<script>
-  // subtle pointer-driven parallax on the hero photo — plain CSS transform, no WebGL/canvas
-  const hero = document.getElementById('hero');
-  const heroScene = document.getElementById('heroScene');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (!reduceMotion && hero && heroScene) {
-    function setPointer(e) {
-      const r = hero.getBoundingClientRect();
-      const cx = e.touches ? e.touches[0].clientX : e.clientX;
-      const cy = e.touches ? e.touches[0].clientY : e.clientY;
-      const nx = Math.max(-1, Math.min(1, ((cx - r.left) / r.width) * 2 - 1));
-      const ny = Math.max(-1, Math.min(1, ((cy - r.top) / r.height) * 2 - 1));
-      hero.style.setProperty('--tiltx', (nx * -10) + 'px');
-      hero.style.setProperty('--tilty', (ny * -6) + 'px');
-    }
-    hero.addEventListener('pointermove', setPointer);
-    hero.addEventListener('pointerleave', () => {
-      hero.style.setProperty('--tiltx', '0px');
-      hero.style.setProperty('--tilty', '0px');
-    });
-  }
 </script>
 </body>
 </html>
